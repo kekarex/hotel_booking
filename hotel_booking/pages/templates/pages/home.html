@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+  <h1>Добро пожаловать в наш отель!</h1>
+  <p>Предлагаем комфортные номера и отличный сервис.</p>
+  <p>
+    <a class="button" href="{% url 'booking:category_list' %}">
+      Перейти к номерам и ценам
+    </a>
+  </p>
+{% endblock %}

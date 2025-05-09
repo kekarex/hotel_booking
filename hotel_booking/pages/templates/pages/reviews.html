@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Отзывы{% endblock %}
+
+{% block content %}
+  <h1>Отзывы наших гостей</h1>
+
+  <ul class="reviews-list">
+    {% for rev in reviews %}
+      <li>
+        <strong>{{ rev.user.username }}</strong>
+        <em>({{ rev.created_at|date:"Y-m-d H:i" }})</em><br>
+        <span class="star-display">
+          {% for i in star_range %}
+            {% if i <= rev.rating %}★{% else %}☆{% endif %}
+          {% endfor %}
+        </span><br>
+        {{ rev.text|linebreaks }}
+      </li>
+    {% empty %}
+      <li>Пока нет ни одного отзыва.</li>
+    {% endfor %}
+  </ul>
+
+  <hr>
+
+  {% if user.is_authenticated %}
+    <h2>Оставить отзыв</h2>
+    <form method="post">
+      {% csrf_token %}
+
+      <!-- Оценка звёздами над текстом -->
+      <div class="field">
+        <label class="field-label">Ваша оценка:</label>
+        <div class="star-rating">
+          <!-- порядок 5→1 для корректной работы row-reverse -->
+          <input type="radio" id="star5" name="rating" value="5">
+          <label for="star5" title="5 звёзд">★</label>
+
+          <input type="radio" id="star4" name="rating" value="4">
+          <label for="star4" title="4 звезды">★</label>
+
+          <input type="radio" id="star3" name="rating" value="3">
+          <label for="star3" title="3 звезды">★</label>
+
+          <input type="radio" id="star2" name="rating" value="2">
+          <label for="star2" title="2 звезды">★</label>
+
+          <input type="radio" id="star1" name="rating" value="1">
+          <label for="star1" title="1 звезда">★</label>
+        </div>
+      </div>
+
+      <!-- Текст отзыва -->
+      <div class="field">
+        <label class="field-label" for="{{ form.text.id_for_label }}">Отзыв:</label>
+        {{ form.text }}
+      </div>
+
+      <button type="submit">Отправить</button>
+    </form>
+  {% else %}
+    <p><a href="{% url 'login' %}?next={% url 'pages:reviews' %}">Войдите</a>, чтобы оставить отзыв.</p>
+  {% endif %}
+{% endblock %}

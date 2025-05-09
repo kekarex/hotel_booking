@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Номера и цены{% endblock %}
+{% block content %}
+  <h1>Категории номеров</h1>
+  <ul class="categories">
+    {% for cat in categories %}
+      <li><a href="{% url 'booking:rooms_by_category' cat %}">{{ cat }}</a></li>
+    {% endfor %}
+  </ul>
+{% endblock %}

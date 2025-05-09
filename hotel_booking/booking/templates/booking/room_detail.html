@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Комната {{ room.number }}{% endblock %}
+{% block content %}
+  <h1>Комната №{{ room.number }} ({{ room.kind }})</h1>
+  <p>Цена: {{ room.price }}€ за ночь</p>
+
+  <h2>Бронирование</h2>
+  <form method="post" class="booking-form">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="field">
+      {{ form.check_in.label_tag }}<br>
+      {{ form.check_in }}
+    </div>
+    <div class="field">
+      {{ form.check_out.label_tag }}<br>
+      {{ form.check_out }}
+    </div>
+    <button type="submit">Забронировать</button>
+  </form>
+{% endblock %}

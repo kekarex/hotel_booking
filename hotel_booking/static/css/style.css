@@ -1,0 +1,298 @@
+/* static/css/style.css */
+
+/* === Цветовые переменные === */
+:root {
+  --primary-color: #2c3e50;
+  --secondary-color: #ecf0f1;
+  --accent-color: #3498db;
+  --text-color: #2c3e50;
+  --bg-color: #ffffff;
+  --font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* === Сброс отступов и границ === */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* === Базовые стили страницы === */
+body {
+  font-family: var(--font-family);
+  color: var(--text-color);
+  background-color: var(--secondary-color);
+  line-height: 1.6;
+}
+
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* === Навигационная панель === */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--primary-color);
+  padding: 1rem 2rem;
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--secondary-color);
+}
+
+.navbar-nav,
+.navbar-auth {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+}
+
+.navbar-nav a,
+.navbar-auth a {
+  color: var(--secondary-color);
+  font-weight: 500;
+}
+
+/* === Контейнер контента === */
+.site-content {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  background-color: var(--bg-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* === Заголовки === */
+h1, h2, h3 {
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+}
+
+/* === Сообщения === */
+.messages {
+  margin-bottom: 1rem;
+}
+
+.message {
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+}
+
+.message.success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.message.error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* === Кнопки === */
+button {
+  background-color: var(--accent-color);
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: opacity 0.3s ease;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+/* === Списки комнат === */
+.room-list {
+  list-style: none;
+  padding: 0;
+}
+
+.room-list li {
+  margin: 0.5rem 0;
+}
+
+/* === Форма бронирования === */
+.booking-form {
+  max-width: 400px;
+  margin-top: 1rem;
+}
+
+.booking-form input,
+.booking-form select,
+.booking-form textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* === Футер === */
+.site-footer {
+  text-align: center;
+  padding: 2rem 0;
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  margin-top: 2rem;
+}
+
+/* === Адаптивность === */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .site-content {
+    margin: 1rem;
+    padding: 1rem;
+  }
+}
+.star-rating {
+  display: flex;
+  flex-direction: row-reverse;  /* Визуально: 5→1, но DOM — 1→5 */
+}
+
+.star-rating input {
+  display: none;
+}
+
+.star-rating label {
+  font-size: 2rem;
+  color: lightgray;
+  cursor: pointer;
+  transition: color 0.2s;
+  user-select: none;
+}
+
+/* Подсветка при наведении: именно влево от курсора */
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: gold;
+}
+
+/* Фиксированная подсветка выбранных звёзд */
+.star-rating input:checked ~ label {
+  color: gold;
+}
+
+/* Чтобы при наведении после выбора подсветка оставалась */
+.star-rating input:checked ~ label:hover,
+.star-rating input:checked ~ label:hover ~ label {
+  color: gold;
+}
+
+}
+
+/* --- Подсветка выбранных звёзд (input:checked) --- */
+.star-rating input:checked ~ label {
+  color: gold;
+}
+
+/* --- Чтобы при наведении после выбора подсветка оставалась --- */
+.star-rating input:checked ~ label:hover,
+.star-rating input:checked ~ label:hover ~ label {
+  color: gold;
+}
+.field {
+  margin-bottom: 1rem;
+}
+
+.field label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: .5rem;
+}
+
+/* ваш .star-rating уже inline-flex – он не будет растягиваться */
+.star-rating {
+  /* если нужно, центровать: */
+  /* display: flex; justify-content: center; */
+  margin-bottom: .5rem;
+}
+/* Общие поля */
+.field {
+  margin-bottom: 1.5rem;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: .5rem;
+  font-weight: bold;
+}
+
+/* Контейнер звёзд */
+.star-rating {
+  display: inline-flex;
+  flex-direction: row-reverse;
+}
+
+/* Скрываем радио, оставляем только метки */
+.star-rating input {
+  display: none;
+}
+
+/* Сам вид звезды */
+.star-rating label {
+  font-size: 2rem;
+  color: lightgray;
+  cursor: pointer;
+  transition: color 0.2s;
+  user-select: none;
+}
+
+/* Подсветка при наведении */
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: gold;
+}
+
+/* Подсветка выбранных звёзд */
+.star-rating input:checked ~ label {
+  color: gold;
+}
+
+/* Сохранение подсветки при наведении после выбора */
+.star-rating input:checked ~ label:hover,
+.star-rating input:checked ~ label:hover ~ label {
+  color: gold;
+}
+
+/* Стили для textarea */
+textarea {
+  width: 100%;
+  height: 100px;
+  padding: .5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+/* Стили для кнопки */
+button {
+  background: #3498db;
+  color: #fff;
+  border: none;
+  padding: .75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #2980b9;
+}

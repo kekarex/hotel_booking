@@ -1,0 +1,18 @@
+/* Стили для категорий */
+.categories { list-style: none; padding: 0; }
+.categories li { margin: .5rem 0; }
+
+/* Форма фильтра */
+.filter-form { margin-bottom: 1rem; }
+.filter-form label { margin-right: 1rem; }
+
+/* Список номеров */
+.room-list { list-style: none; padding: 0; }
+.room-list li { margin: .5rem 0; }
+
+/* Форма бронирования */
+.booking-form { max-width: 400px; margin-top: 1rem; }
+.booking-form .field { margin-bottom: .75rem; }
+.booking-form input { width: 100%; padding: .4rem; border: 1px solid #ccc; border-radius: 4px; }
+.booking-form button { background: #3498db; color: #fff; padding: .6rem 1.2rem; border: none; border-radius: 4px; cursor: pointer; }
+.booking-form button:hover { background: #2980b9; }

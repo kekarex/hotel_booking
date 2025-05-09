@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Номера: {{ kind }}{% endblock %}
+{% block content %}
+  <h1>Номера категории «{{ kind }}»</h1>
+  <form method="get" class="filter-form">
+    <label>Заезд: <input type="date" name="check_in" value="{{ check_in }}"></label>
+    <label>Выезд: <input type="date" name="check_out" value="{{ check_out }}"></label>
+    <button type="submit">Показать доступные</button>
+  </form>
+  <ul class="room-list">
+    {% for room in rooms %}
+      <li>
+        <a href="{% url 'booking:room_detail' room.pk %}">
+          №{{ room.number }} — {{ room.price }}€ за ночь
+        </a>
+      </li>
+    {% empty %}
+      <li>Нет доступных номеров</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

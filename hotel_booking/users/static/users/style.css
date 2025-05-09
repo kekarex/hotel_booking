@@ -1,0 +1,12 @@
+/* users/static/users/style.css */
+.profile-form {
+  max-width: 400px;
+  margin: 2rem auto;
+}
+.profile-form input {
+  width: 100%;
+  padding: .5rem;
+  margin-bottom: .75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}

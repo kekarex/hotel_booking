@@ -1,0 +1,9 @@
+
+.pages-list {
+  list-style: none;
+  padding: 0;
+}
+
+.pages-list li {
+  margin: .5rem 0;
+}

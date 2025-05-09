@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Мой Отель{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'booking/style.css' %}">
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="navbar">
+      <a class="navbar-brand" href="{% url 'pages:home' %}">🏨 Мой Отель</a>
+      <ul class="navbar-nav">
+        <li><a href="{% url 'pages:home' %}">Главная</a></li>
+        <li><a href="{% url 'pages:about' %}">О нас</a></li>
+        <li><a href="{% url 'pages:services' %}">Услуги</a></li>
+        <li><a href="{% url 'booking:category_list' %}">Номера и цены</a></li>
+        <li><a href="{% url 'pages:reviews' %}">Отзывы</a></li>
+        <li><a href="{% url 'pages:contacts' %}">Контакты</a></li>
+      </ul>
+      <ul class="navbar-auth">
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'users:profile' %}">Привет, {{ user.username }}</a></li>
+          <li>
+            <form method="post" action="{% url 'logout' %}" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="logout-button">Выйти</button>
+            </form>
+          </li>
+        {% else %}
+          <li><a href="{% url 'login' %}">Войти</a></li>
+          <li><a href="{% url 'users:register' %}">Регистрация</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+  </header>
+
+  <main class="site-content">
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; {{ now.year }} Мой Отель. Все права защищены.</p>
+  </footer>
+
+  <script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>
