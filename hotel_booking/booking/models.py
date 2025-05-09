@@ -5,14 +5,17 @@ from django.core.exceptions import ValidationError
 User = get_user_model()
 
 class Room(models.Model):
-    """Номер отеля"""
     number = models.CharField('Номер', max_length=10, unique=True)
     kind = models.CharField('Категория', max_length=50)
     price = models.DecimalField('Цена за ночь', max_digits=8, decimal_places=2)
-
-    class Meta:
-        verbose_name = 'Комната'
-        verbose_name_plural = 'Комнаты'
+    area = models.PositiveIntegerField('Площадь, м²', default=0)
+    bed_type = models.CharField('Тип кровати', max_length=50, blank=True)
+    parking = models.CharField('Парковка', max_length=50, blank=True)
+    tv = models.CharField('Телевидение', max_length=50, blank=True)
+    air_conditioning = models.CharField('Кондиционер', max_length=50, blank=True)
+    wifi = models.CharField('Wi-Fi', max_length=50, blank=True)
+    iron = models.CharField('Утюг', max_length=50, blank=True)
+    image = models.ImageField('Фото номера', upload_to='rooms/', blank=True)
 
     def __str__(self):
         return f"{self.kind} №{self.number}"

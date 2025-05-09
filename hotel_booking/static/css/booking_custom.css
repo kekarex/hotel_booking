@@ -1,0 +1,86 @@
+.rooms-container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+.section-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  color: var(--primary-color);
+}
+.rooms-slider {
+  position: relative;
+}
+.slides-wrapper {
+  overflow: hidden;
+}
+.slides {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+.slide {
+  flex: 0 0 100%;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+.slide-img {
+  width: 60%;
+  border-radius: 8px;
+  object-fit: cover;
+}
+.slide-card {
+  width: 40%;
+  background: #fff;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+.card-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+.card-features {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1rem;
+}
+.card-features li {
+  display: flex;
+  align-items: center;
+}
+.card-features i {
+  margin-right: 0.5rem;
+  color: var(--accent-color);
+}
+.card-link {
+  font-style: italic;
+  color: var(--accent-color);
+  text-decoration: none;
+}
+.card-link:hover {
+  text-decoration: underline;
+}
+.slider-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.8);
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  font-size: 2rem;
+  color: var(--primary-color);
+  border-radius: 50%;
+  z-index: 2;
+}
+.prev {
+  left: 10px;
+}
+.next {
+  right: 10px;
+}

@@ -1,21 +1,34 @@
 {% extends 'base.html' %}
-{% block title %}Номера: {{ kind }}{% endblock %}
+{% block title %}Номера и цены{% endblock %}
 {% block content %}
-  <h1>Номера категории «{{ kind }}»</h1>
-  <form method="get" class="filter-form">
-    <label>Заезд: <input type="date" name="check_in" value="{{ check_in }}"></label>
-    <label>Выезд: <input type="date" name="check_out" value="{{ check_out }}"></label>
-    <button type="submit">Показать доступные</button>
-  </form>
-  <ul class="room-list">
-    {% for room in rooms %}
-      <li>
-        <a href="{% url 'booking:room_detail' room.pk %}">
-          №{{ room.number }} — {{ room.price }}€ за ночь
-        </a>
-      </li>
-    {% empty %}
-      <li>Нет доступных номеров</li>
-    {% endfor %}
-  </ul>
+<div class="rooms-container">
+  <h1 class="section-title">Номера и цены</h1>
+  <div class="rooms-slider">
+    <button class="slider-nav prev">&#10094;</button>
+    <div class="slides-wrapper">
+      <div class="slides">
+        {% for room in rooms %}
+        <div class="slide">
+          <img src="{{ room.image.url }}" alt="Номер {{ room.number }}" class="slide-img">
+          <div class="slide-card">
+            <h2 class="card-title">{{ room.kind }}</h2>
+            <hr>
+            <ul class="card-features">
+              <li><i class="icon-area"></i>{{ room.area }} м²</li>
+              <li><i class="icon-bed"></i>{{ room.bed_type }}</li>
+              <li><i class="icon-parking"></i>{{ room.parking }}</li>
+              <li><i class="icon-tv"></i>{{ room.tv }}</li>
+              <li><i class="icon-ac"></i>{{ room.air_conditioning }}</li>
+              <li><i class="icon-wifi"></i>{{ room.wifi }}</li>
+              <li><i class="icon-iron"></i>{{ room.iron }}</li>
+            </ul>
+            <a href="{% url 'booking:room_detail' room.pk %}" class="card-link">Подробнее</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <button class="slider-nav next">&#10095;</button>
+  </div>
+</div>
 {% endblock %}

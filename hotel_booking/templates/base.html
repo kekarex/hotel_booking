@@ -5,14 +5,120 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Мой Отель{% endblock %}</title>
+
+  <!-- Основные стили -->
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
   <link rel="stylesheet" href="{% static 'booking/style.css' %}">
+
+  <!-- Дополнительные стили для карусели номеров -->
+  <link rel="stylesheet" href="{% static 'css/booking_custom.css' %}">
+
+  <!-- Inline CSS (переменные и кастомизации) -->
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #ecf0f1;
+      --accent-color: #3498db;
+    }
+
+    /* Базовые сбросы */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background-color: var(--secondary-color);
+      color: var(--primary-color);
+      line-height: 1.6;
+    }
+
+    /* Навигация */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--primary-color);
+      padding: 1rem 2rem;
+    }
+    .navbar-brand a {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--secondary-color);
+      text-decoration: none;
+    }
+    .navbar-nav, .navbar-auth {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .navbar-nav a, .navbar-auth a, .logout-button {
+      color: var(--secondary-color);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .logout-button {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font: inherit;
+      padding: 0;
+    }
+    .admin-btn {
+      background: #e74c3c;
+      color: #fff;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .admin-btn:hover {
+      background: #c0392b;
+    }
+
+    /* Контейнер контента */
+    .site-content {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    /* Сообщения */
+    .messages {
+      margin-bottom: 1rem;
+    }
+    .message {
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.5rem;
+      border-radius: 4px;
+    }
+    .message.success { background-color: #d4edda; color: #155724; }
+    .message.error   { background-color: #f8d7da; color: #721c24; }
+
+    /* Футер */
+    .site-footer {
+      text-align: center;
+      padding: 2rem 0;
+      background-color: var(--primary-color);
+      color: var(--secondary-color);
+      margin-top: 2rem;
+    }
+  </style>
+
+  <!-- Скрипт для карусели номеров -->
+  <script src="{% static 'js/booking_slider.js' %}" defer></script>
 </head>
 <body>
-
-  <header class="site-header">
+  <header>
     <nav class="navbar">
-      <a class="navbar-brand" href="{% url 'pages:home' %}">🏨 Мой Отель</a>
+      <div class="navbar-brand">
+        <a href="{% url 'pages:home' %}">🏨 Мой Отель</a>
+      </div>
       <ul class="navbar-nav">
         <li><a href="{% url 'pages:home' %}">Главная</a></li>
         <li><a href="{% url 'pages:about' %}">О нас</a></li>
@@ -22,6 +128,9 @@
         <li><a href="{% url 'pages:contacts' %}">Контакты</a></li>
       </ul>
       <ul class="navbar-auth">
+        {% if user.is_staff %}
+          <li><a href="{% url 'admin:index' %}" class="admin-btn">Админ</a></li>
+        {% endif %}
         {% if user.is_authenticated %}
           <li><a href="{% url 'users:profile' %}">Привет, {{ user.username }}</a></li>
           <li>
@@ -52,7 +161,5 @@
   <footer class="site-footer">
     <p>&copy; {{ now.year }} Мой Отель. Все права защищены.</p>
   </footer>
-
-  <script src="{% static 'js/app.js' %}"></script>
 </body>
 </html>
