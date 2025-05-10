@@ -1,53 +1,80 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
+from datetime import date, timedelta
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.contrib.auth.views import redirect_to_login
+from django.db.models import Count, Q, F
 from .models import Room, Booking
 from .forms import BookingForm
 
-# Список категорий
 def category_list(request):
-    categories = Room.objects.values_list('kind', flat=True).distinct()
-    return render(request, 'booking/category_list.html', {'categories': categories})
+    # даты
+    check_in  = request.GET.get('check_in')  or date.today().isoformat()
+    check_out = request.GET.get('check_out') or (date.today()+timedelta(days=1)).isoformat()
 
-# Список номеров по категории с фильтром дат
+    # агрегируем: всего/забронировано/свободно по каждой категории
+    qs = Room.objects.values('kind') \
+        .annotate(total=Count('id'),
+                  booked=Count('booking',
+                               filter=Q(booking__check_in__lt=check_out,
+                                        booking__check_out__gt=check_in))) \
+        .annotate(available=F('total') - F('booked'))
+
+    categories = []
+    for c in qs:
+        categories.append({
+            'kind':      c['kind'],
+            'total':     c['total'],
+            'available': c['available'],
+            'url':       f"{ reverse('booking:rooms_by_category', args=[c['kind']]) }?check_in={check_in}&check_out={check_out}"
+        })
+
+    return render(request, 'booking/category_list.html', {
+        'categories': categories,
+        'check_in':   check_in,
+        'check_out':  check_out,
+    })
+
 def rooms_by_category(request, kind):
-    rooms = Room.objects.filter(kind=kind)
-    check_in = request.GET.get('check_in')
+    # даты
+    check_in  = request.GET.get('check_in')
     check_out = request.GET.get('check_out')
-    available_rooms = rooms
-    # если указаны даты, исключаем занятые
+
+    # фильтруем комнаты
+    rooms = Room.objects.filter(kind=kind)
     if check_in and check_out:
-        available_rooms = rooms.exclude(
+        rooms = rooms.exclude(
             booking__check_in__lt=check_out,
             booking__check_out__gt=check_in
         )
+
     return render(request, 'booking/rooms_by_category.html', {
-        'kind': kind,
-        'rooms': available_rooms,
-        'check_in': check_in,
+        'kind':      kind,
+        'rooms':     rooms,
+        'check_in':  check_in,
         'check_out': check_out,
     })
 
-# Детали номера и бронирование
 def room_detail(request, pk):
     room = get_object_or_404(Room, pk=pk)
+    check_in  = request.GET.get('check_in')
+    check_out = request.GET.get('check_out')
+
     if request.method == 'POST':
         if not request.user.is_authenticated:
             return redirect_to_login(request.get_full_path())
         form = BookingForm(request.POST)
         if form.is_valid():
-            booking = form.save(commit=False)
-            booking.user = request.user
-            booking.room = room
-            try:
-                booking.save()
-                messages.success(request, 'Номер успешно забронирован!')
-                return redirect('booking:category_list')
-            except Exception as e:
-                form.add_error(None, str(e))
+            b = form.save(commit=False)
+            b.user = request.user
+            b.room = room
+            b.save()
+            return redirect('booking:rooms_by_category', kind=room.kind)
     else:
-        form = BookingForm()
+        form = BookingForm(initial={'check_in': check_in, 'check_out': check_out})
+
     return render(request, 'booking/room_detail.html', {
-        'room': room,
-        'form': form,
+        'room':      room,
+        'form':      form,
+        'check_in':  check_in,
+        'check_out': check_out,
     })

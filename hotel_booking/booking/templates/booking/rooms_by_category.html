@@ -1,34 +1,27 @@
 {% extends 'base.html' %}
-{% block title %}Номера и цены{% endblock %}
+{% block title %}Номера: {{ kind }}{% endblock %}
 {% block content %}
-<div class="rooms-container">
-  <h1 class="section-title">Номера и цены</h1>
-  <div class="rooms-slider">
-    <button class="slider-nav prev">&#10094;</button>
-    <div class="slides-wrapper">
-      <div class="slides">
-        {% for room in rooms %}
-        <div class="slide">
-          <img src="{{ room.image.url }}" alt="Номер {{ room.number }}" class="slide-img">
-          <div class="slide-card">
-            <h2 class="card-title">{{ room.kind }}</h2>
-            <hr>
-            <ul class="card-features">
-              <li><i class="icon-area"></i>{{ room.area }} м²</li>
-              <li><i class="icon-bed"></i>{{ room.bed_type }}</li>
-              <li><i class="icon-parking"></i>{{ room.parking }}</li>
-              <li><i class="icon-tv"></i>{{ room.tv }}</li>
-              <li><i class="icon-ac"></i>{{ room.air_conditioning }}</li>
-              <li><i class="icon-wifi"></i>{{ room.wifi }}</li>
-              <li><i class="icon-iron"></i>{{ room.iron }}</li>
-            </ul>
-            <a href="{% url 'booking:room_detail' room.pk %}" class="card-link">Подробнее</a>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
+
+<p><a href="{% url 'booking:category_list' %}?check_in={{ check_in }}&check_out={{ check_out }}">← Назад к категориям</a></p>
+<h1>Номера категории «{{ kind }}»</h1>
+
+{% if rooms %}
+<div class="grid-rooms">
+  {% for room in rooms %}
+  <div class="room-card">
+    {% if room.image %}
+      <img src="{{ room.image.url }}" alt="Номер {{ room.number }}">
+    {% endif %}
+    <div class="room-info">
+      <h3>№{{ room.number }}</h3>
+      <p>Цена: {{ room.price }}€ за ночь</p>
+      <a href="{% url 'booking:room_detail' room.pk %}?check_in={{ check_in }}&check_out={{ check_out }}">Забронировать</a>
     </div>
-    <button class="slider-nav next">&#10095;</button>
   </div>
+  {% endfor %}
 </div>
+{% else %}
+  <p>Нет доступных номеров в этой категории на выбранные даты.</p>
+{% endif %}
+
 {% endblock %}

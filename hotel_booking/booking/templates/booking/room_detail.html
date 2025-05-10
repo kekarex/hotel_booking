@@ -1,21 +1,36 @@
 {% extends 'base.html' %}
-{% block title %}Комната {{ room.number }}{% endblock %}
+{% block title %}Бронирование №{{ room.number }}{% endblock %}
 {% block content %}
-  <h1>Комната №{{ room.number }} ({{ room.kind }})</h1>
-  <p>Цена: {{ room.price }}€ за ночь</p>
 
-  <h2>Бронирование</h2>
-  <form method="post" class="booking-form">
-    {% csrf_token %}
-    {{ form.non_field_errors }}
-    <div class="field">
-      {{ form.check_in.label_tag }}<br>
-      {{ form.check_in }}
-    </div>
-    <div class="field">
-      {{ form.check_out.label_tag }}<br>
-      {{ form.check_out }}
-    </div>
-    <button type="submit">Забронировать</button>
-  </form>
+<p><a href="{% url 'booking:rooms_by_category' room.kind %}?check_in={{ check_in }}&check_out={{ check_out }}">← Назад к списку номеров</a></p>
+<h1>Комната №{{ room.number }} ({{ room.kind }})</h1>
+
+{% if room.image %}
+  <img src="{{ room.image.url }}" alt="Номер {{ room.number }}" class="detail-img">
+{% endif %}
+
+<ul class="detail-list">
+  <li>Цена: {{ room.price }}€ за ночь</li>
+  <li>Площадь: {{ room.area }} м²</li>
+  <li>Тип кровати: {{ room.bed_type }}</li>
+  <li>Парковка: {{ room.parking }}</li>
+  <li>Wi-Fi: {{ room.wifi }}</li>
+  <li>Кондиционер: {{ room.air_conditioning }}</li>
+  <li>Телевизор: {{ room.tv }}</li>
+  <li>Утюг: {{ room.iron }}</li>
+</ul>
+
+<h2>Заполните данные бронирования</h2>
+<form method="post" class="booking-form">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="field">
+    {{ form.check_in.label_tag }}<br>{{ form.check_in }}
+  </div>
+  <div class="field">
+    {{ form.check_out.label_tag }}<br>{{ form.check_out }}
+  </div>
+  <button>Забронировать</button>
+</form>
+
 {% endblock %}

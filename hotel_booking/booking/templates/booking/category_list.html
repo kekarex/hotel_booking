@@ -1,10 +1,40 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block title %}Номера и цены{% endblock %}
+
 {% block content %}
+  <!-- КОММЕНТАРИЙ ДЛЯ ПРОВЕРКИ шаблона -->
+  <!-- ★★★ THIS IS GRID TEMPLATE ★★★ -->
+
+  <div class="filter-bar">
+    <form method="get" class="filter-form">
+      <label>Заезд: <input type="date" name="check_in"  value="{{ check_in }}"></label>
+      <label>Выезд: <input type="date" name="check_out" value="{{ check_out }}"></label>
+      <button type="submit">Показать</button>
+    </form>
+  </div>
+
   <h1>Категории номеров</h1>
-  <ul class="categories">
+
+  <!-- ОБЯЗАТЕЛЬНО класс grid-categories -->
+  <div class="grid-categories">
     {% for cat in categories %}
-      <li><a href="{% url 'booking:rooms_by_category' cat %}">{{ cat }}</a></li>
+      <div class="cat-card{% if cat.available == 0 %} sold-out{% endif %}">
+        <img
+          src="{% static 'images/categories/'|add:cat.kind|lower|add:'.jpg' %}"
+          alt="{{ cat.kind }}"
+        >
+        <div class="cat-info">
+          <h2>{{ cat.kind }}</h2>
+          <p>Свободно {{ cat.available }} из {{ cat.total }}</p>
+          {% if cat.available > 0 %}
+            <a href="{{ cat.url }}" class="btn">Выбрать</a>
+          {% else %}
+            <span class="btn disabled">Нет мест</span>
+          {% endif %}
+        </div>
+      </div>
     {% endfor %}
-  </ul>
+  </div>
 {% endblock %}
