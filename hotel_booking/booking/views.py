@@ -9,11 +9,11 @@ from .forms import BookingForm
 from django.conf import settings
 
 CATEGORY_DESCRIPTIONS = {
-    'Business': 'Уютный бизнес-класс с рабочим местом и полным набором услуг.',
-    'Deluxe':   'Просторный номер Делюкс с панорамным видом и VIP-сервисом.',
     'Standard': 'Комфортный стандартный номер для недорогого проживания.',
     'Suite':    'Роскошный сьют с отдельной гостиной и кухней.',
-    'Family':   'Большой семейный номер с дополнительными кроватями.'
+    'Family':   'Большой семейный номер с дополнительными кроватями.',
+    'Business': 'Уютный бизнес-класс с рабочим местом и полным набором услуг.',
+    'Deluxe':   'Просторный номер Делюкс с панорамным видом и VIP-сервисом.'
 }
 
 def category_list(request):
@@ -61,10 +61,17 @@ def category_list(request):
                                + f'?check_in={check_in}&check_out={check_out}'
         })
 
+    ORDER = ['Standard', 'Family', 'Suite', 'Business', 'Deluxe']
+
+    # Сортируем по индексу в ORDER (категории вне списка попадут в конец)
+    categories.sort(
+        key=lambda c: ORDER.index(c['kind']) if c['kind'] in ORDER else len(ORDER)
+    )
+
     return render(request, 'booking/category_list.html', {
         'categories': categories,
-        'check_in':   check_in,
-        'check_out':  check_out,
+        'check_in': check_in,
+        'check_out': check_out,
     })
 
 def rooms_by_category(request, kind):
