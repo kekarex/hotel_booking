@@ -1,27 +1,75 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block title %}Номера: {{ kind }}{% endblock %}
 {% block content %}
+  <a href="{% url 'booking:category_list' %}?check_in={{ check_in }}&check_out={{ check_out }}">← Назад к категориям</a>
+  <h1 class="section-title">Номера категории «{{ kind }}»</h1>
 
-<p><a href="{% url 'booking:category_list' %}?check_in={{ check_in }}&check_out={{ check_out }}">← Назад к категориям</a></p>
-<h1>Номера категории «{{ kind }}»</h1>
+  <div class="rooms-container">
+    <div class="rooms-slider">
+      {% for item in rooms %}
+        {% with room=item.room images=item.images %}
+        <div class="slide">
+          <!-- Слайдер фото -->
+          <div class="slide-img">
+            {% if images %}
+              <div class="slides">
+                {% for img in images %}
+                  <img src="{{ img }}" class="carousel-img" alt="№{{ room.number }}">
+                {% endfor %}
+              </div>
+            {% else %}
+              <img src="{% static 'images/placeholder.png' %}" alt="Нет фото">
+            {% endif %}
+          </div>
 
-{% if rooms %}
-<div class="grid-rooms">
-  {% for room in rooms %}
-  <div class="room-card">
-    {% if room.image %}
-      <img src="{{ room.image.url }}" alt="Номер {{ room.number }}">
-    {% endif %}
-    <div class="room-info">
-      <h3>№{{ room.number }}</h3>
-      <p>Цена: {{ room.price }}€ за ночь</p>
-      <a href="{% url 'booking:room_detail' room.pk %}?check_in={{ check_in }}&check_out={{ check_out }}">Забронировать</a>
+          <!-- Панель характеристик -->
+          <div class="slide-card">
+            <h2>Номер №{{ room.number }}</h2>
+            <hr>
+            <div class="features-grid">
+              <div class="feature">
+                <img src="{% static 'icon/area.png' %}" alt="Площадь">
+                <span>{{ room.area }} м²</span>
+              </div>
+              <div class="feature">
+                <img src="{% static 'icon/bed.png' %}" alt="Кровать">
+                <span>{{ room.bed_type }}</span>
+              </div>
+              <div class="feature">
+                <img src="{% static 'icon/parking.png' %}" alt="Парковка">
+                <span>{{ room.parking }}</span>
+              </div>
+              <div class="feature">
+                <img src="{% static 'icon/tv.png' %}" alt="Телевизор">
+                <span>{{ room.tv }}</span>
+              </div>
+              <div class="feature">
+                <img src="{% static 'icon/ac.png' %}" alt="Кондиционер">
+                <span>{{ room.air_conditioning }}</span>
+              </div>
+              <div class="feature">
+                <img src="{% static 'icon/wifi.png' %}" alt="Wi-Fi">
+                <span>{{ room.wifi }}</span>
+              </div>
+              <div class="feature">
+                <img src="{% static 'icon/iron.png' %}" alt="Утюг">
+                <span>{{ room.iron }}</span>
+              </div>
+            </div>
+            <p class="availability">Свободно {{ room.available|default:'' }} из {{ room.total|default:'' }}</p>
+            <a href="{% url 'booking:room_detail' room.pk %}?check_in={{ check_in }}&check_out={{ check_out }}" class="btn btn-primary">Забронировать</a>
+          </div>
+        </div>
+        {% endwith %}
+      {% endfor %}
+
+      <!-- навигация слайдера -->
+      <button class="slider-nav prev">‹</button>
+      <button class="slider-nav next">›</button>
     </div>
   </div>
-  {% endfor %}
-</div>
-{% else %}
-  <p>Нет доступных номеров в этой категории на выбранные даты.</p>
-{% endif %}
 
+  <script src="{% static 'js/category_carousel.js' %}" defer></script>
 {% endblock %}

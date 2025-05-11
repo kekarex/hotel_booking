@@ -13,7 +13,6 @@
   </div>
 
   <h1>Категории номеров</h1>
-
   <div class="grid-categories">
     {% for cat in categories %}
       <div class="cat-card{% if cat.available == 0 %} sold-out{% endif %}">
@@ -34,15 +33,45 @@
 
         <div class="cat-info">
           <h2>{{ cat.kind }}</h2>
-          <p class="cat-desc">{{ cat.description }}</p>
-          <p>Свободно {{ cat.available }} из {{ cat.total }}</p>
+          <!-- Панель мини-иконок -->
+          <div class="features-grid">
+            <div class="feature-item">
+              <img src="{% static 'images/icon/area.png' %}" alt="Площадь">
+              <span>{{ cat.area }} м²</span>
+            </div>
+            <div class="feature-item">
+              <img src="{% static 'images/icon/bed.png' %}" alt="Кровать">
+              <span>{{ cat.bed_type }}</span>
+            </div>
+            <div class="feature-item">
+              <img src="{% static 'images/icon/parking.png' %}" alt="Парковка">
+              <span>{{ cat.parking }}</span>
+            </div>
+            <div class="feature-item">
+              <img src="{% static 'images/icon/tv.png' %}" alt="Телевизор">
+              <span>{{ cat.tv }}</span>
+            </div>
+            <div class="feature-item">
+              <img src="{% static 'images/icon/ac.png' %}" alt="Кондиционер">
+              <span>{{ cat.air_conditioning }}</span>
+            </div>
+            <div class="feature-item">
+              <img src="{% static 'images/icon/wifi.png' %}" alt="Wi-Fi">
+              <span>{{ cat.wifi }}</span>
+            </div>
+            <div class="feature-item">
+              <img src="{% static 'images/icon/iron.png' %}" alt="Утюг">
+              <span>{{ cat.iron }}</span>
+            </div>
+          </div>
+
+          <p class="availability">Свободно {{ cat.available }} из {{ cat.total }}</p>
           {% if cat.available > 0 %}
             <a href="{{ cat.url }}" class="btn">Выбрать</a>
           {% else %}
             <span class="btn disabled">Нет мест</span>
           {% endif %}
         </div>
-
       </div>
     {% endfor %}
   </div>

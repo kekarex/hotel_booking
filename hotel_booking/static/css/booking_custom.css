@@ -137,3 +137,44 @@
 .filter-form button:hover {
   background: #2980b9;
 }
+.cat-features {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+}
+.cat-features li {
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  color: #444;
+}
+.cat-features img {
+  width: 20px;
+  height: 20px;
+  margin-right: 0.5rem;
+}
+/* Сетка микро-иконок */
+.features-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  margin: 0.5rem 0 1rem;
+}
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: #333;
+}
+.feature-item img {
+  width: 24px;
+  height: 24px;
+}
+.availability {
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
