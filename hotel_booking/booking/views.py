@@ -7,6 +7,9 @@ from django.db.models import Count, Q, F
 from .models import Room, Booking
 from .forms import BookingForm
 from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+
 
 '''CATEGORY_DESCRIPTIONS = {
     'Standard': 'Комфортный стандартный номер для недорогого проживания.',
@@ -36,91 +39,66 @@ CATEGORY_DESCRIPTIONS = {
     'Deluxe':   'Просторный номер «Делюкс» с панорамным видом и VIP-сервисом.',
 }
 
-
 def category_list(request):
-    """
-    Список всех категорий с подсчётом total/booked/available.
-    """
+    # ваш код без изменений
     check_in  = request.GET.get('check_in')  or date.today().isoformat()
     check_out = request.GET.get('check_out') or (date.today() + timedelta(days=1)).isoformat()
-
-    # Группируем по kind, считаем общее и забронированное количество
     qs = (
-        Room.objects
-        .values('kind')
+        Room.objects.values('kind')
         .annotate(
             total=Count('id'),
-            booked=Count(
-                'booking',
-                filter=Q(
-                    booking__check_in__lt=check_out,
-                    booking__check_out__gt=check_in
-                )
-            )
+            booked=Count('booking', filter=Q(
+                booking__check_in__lt=check_out,
+                booking__check_out__gt=check_in
+            ))
         )
         .annotate(available=F('total') - F('booked'))
     )
-
     categories = []
     for c in qs:
         kind = c['kind']
-        # Собираем превью-картинки из static/images/categories/<kind_lower>/
+        sample = Room.objects.filter(kind=kind).first()
+        # собираем список картинок для слайдера
         static_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'categories', kind.lower())
         imgs = []
         if os.path.isdir(static_dir):
             for fn in sorted(os.listdir(static_dir)):
-                if fn.lower().endswith(('.jpg', '.jpeg', '.png', '.gif')):
+                if fn.lower().endswith(('.jpg','.jpeg','.png','.gif')):
                     imgs.append(settings.STATIC_URL + f'images/categories/{kind.lower()}/{fn}')
-
-        # Берём любое (sample) значение остальных полей из первой комнаты этой категории
-        sample = Room.objects.filter(kind=kind).first()
-
         categories.append({
-            'kind':        kind,
-            'total':       c['total'],
-            'available':   c['available'],
+            'kind': kind,
+            'total': c['total'],
+            'available': c['available'],
             'description': CATEGORY_DESCRIPTIONS.get(kind, ''),
-            'area':        getattr(sample, 'area', ''),
-            'bed_type':    getattr(sample, 'bed_type', ''),
-            'parking':     getattr(sample, 'parking', ''),
-            'tv':          getattr(sample, 'tv', ''),
+            'area': getattr(sample, 'area', ''),
+            'bed_type': getattr(sample, 'bed_type', ''),
+            'parking': getattr(sample, 'parking', ''),
+            'tv': getattr(sample, 'tv', ''),
             'air_conditioning': getattr(sample, 'air_conditioning', ''),
-            'wifi':        getattr(sample, 'wifi', ''),
-            'iron':        getattr(sample, 'iron', ''),
-            'images':      imgs,
-            'url':         reverse('booking:rooms_by_category', args=[kind]) +
-                           f'?check_in={check_in}&check_out={check_out}',
+            'wifi': getattr(sample, 'wifi', ''),
+            'iron': getattr(sample, 'iron', ''),
+            'images': imgs,
+            'url': reverse('booking:rooms_by_category', args=[kind]) +
+                   f'?check_in={check_in}&check_out={check_out}',
         })
-
-    # Порядок вывода категорий (можно изменить)
     ORDER = ['Standard','Family','Suite','Business','Deluxe']
-    categories.sort(key=lambda x: ORDER.index(x['kind']) if x['kind'] in ORDER else len(ORDER))
-
+    categories.sort(key=lambda x: ORDER.index(x['kind']))
     return render(request, 'booking/category_list.html', {
         'categories': categories,
         'check_in':   check_in,
         'check_out':  check_out,
     })
 
-
+@login_required
 def rooms_by_category(request, kind):
-    """
-    Подробная страница конкретной категории:
-    — слайдер картинок из static/images/categories/<kind>/
-    — подробная информация
-    — подсчёт total/booked/available из Room.objects.filter(kind=kind)
-    """
-    check_in  = request.GET.get('check_in')
-    check_out = request.GET.get('check_out')
+    # получаем даты из GET или из POST-hidden
+    check_in  = request.GET.get('check_in') or request.POST.get('check_in')
+    check_out = request.GET.get('check_out') or request.POST.get('check_out')
 
-    # Коллекция всех комнат данного kind
     qs = Room.objects.filter(kind=kind)
-    if not qs.exists():
-        return render(request, '404.html', status=404)
-
-    sample = qs.first()  # безопасно берём первую, чтобы взять поля area, bed_type и т.д.
-
+    sample = qs.first()
     total = qs.count()
+    # считаем количество уже занятых в эти даты
     if check_in and check_out:
         booked = qs.filter(
             booking__check_in__lt=check_out,
@@ -130,13 +108,36 @@ def rooms_by_category(request, kind):
         booked = 0
     available = total - booked
 
-    # Слайдер картинок из папки static/images/categories/<kind_lower>/
+    # слайдер картинок
     static_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'categories', kind.lower())
     images = []
     if os.path.isdir(static_dir):
         for fn in sorted(os.listdir(static_dir)):
-            if fn.lower().endswith(('.jpg', '.jpeg', '.png', '.gif')):
+            if fn.lower().endswith(('.jpg','.jpeg','.png','.gif')):
                 images.append(settings.STATIC_URL + f'images/categories/{kind.lower()}/{fn}')
+
+    # ОБРАБОТКА ЗАПРОСА НА БРОНИРОВАНИЕ
+    if request.method == 'POST':
+        if available <= 0:
+            messages.error(request, 'К сожалению, в выбранные даты нет свободных номеров.')
+        else:
+            # находим первую свободную комнату
+            free_room = qs.exclude(
+                booking__check_in__lt=check_out,
+                booking__check_out__gt=check_in
+            ).first()
+            # создаём бронь
+            Booking.objects.create(
+                user=request.user,
+                room=free_room,
+                check_in=check_in,
+                check_out=check_out
+            )
+            messages.success(request, f'Успешно забронирован номер {free_room.number}!')
+            # обновляем available
+            available -= 1
+        # перенаправляем, чтобы избежать повторного POST при обновлении страницы
+        return redirect(request.path + f'?check_in={check_in}&check_out={check_out}')
 
     return render(request, 'booking/rooms_by_category.html', {
         'kind':        kind,
@@ -154,6 +155,8 @@ def rooms_by_category(request, kind):
         'check_in':    check_in,
         'check_out':   check_out,
     })
+
+
 def room_detail(request, kind, pk):
     check_in  = request.GET.get('check_in')
     check_out = request.GET.get('check_out')
