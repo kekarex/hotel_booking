@@ -1,28 +1,28 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Инициализация слайдера во всех контейнерах
   document.querySelectorAll('.slider-container').forEach(container => {
     const track = container.querySelector('.slider-track');
     const slides = Array.from(track.children);
+    const total = slides.length;
     let idx = 0;
 
-    function update() {
-      track.style.transform = `translateX(-${idx * 100}%)`;
+    // Задаём track и слайдам относительные размеры
+    track.style.width = `${total * 100}%`;
+    slides.forEach(slide => {
+      slide.style.width = `${100 / total}%`;
+    });
+
+    // Навигационные кнопки
+    const prev = container.querySelector('.slider-nav.prev');
+    const next = container.querySelector('.slider-nav.next');
+    if (!prev || !next) return;
+
+    function goTo(i) {
+      idx = (i + total) % total;
+      // смещаем на ширину одного слайда * номер
+      track.style.transform = `translateX(-${idx * (100 / total)}%)`;
     }
 
-    container.querySelector('.next').addEventListener('click', () => {
-      idx = (idx + 1) % slides.length;
-      update();
-    });
-
-    container.querySelector('.prev').addEventListener('click', () => {
-      idx = (idx - 1 + slides.length) % slides.length;
-      update();
-    });
-
-    // Подгоняем ширину track под количество слайдов
-    track.style.width = `${slides.length * 100}%`;
-    slides.forEach(img => {
-      img.style.width = `${100 / slides.length}%`;
-    });
+    prev.addEventListener('click', () => goTo(idx - 1));
+    next.addEventListener('click', () => goTo(idx + 1));
   });
 });
