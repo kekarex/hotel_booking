@@ -1,75 +1,106 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Номера: {{ kind }}{% endblock %}
+{% block title %}Категория «{{ kind }}»{% endblock %}
+
 {% block content %}
-  <a href="{% url 'booking:category_list' %}?check_in={{ check_in }}&check_out={{ check_out }}">← Назад к категориям</a>
-  <h1 class="section-title">Номера категории «{{ kind }}»</h1>
+  <a href="{% url 'booking:category_list' %}?check_in={{ check_in }}&check_out={{ check_out }}" class="back-link">
+    ← Вернуться к списку категорий
+  </a>
 
-  <div class="rooms-container">
-    <div class="rooms-slider">
-      {% for item in rooms %}
-        {% with room=item.room images=item.images %}
-        <div class="slide">
-          <!-- Слайдер фото -->
-          <div class="slide-img">
-            {% if images %}
-              <div class="slides">
-                {% for img in images %}
-                  <img src="{{ img }}" class="carousel-img" alt="№{{ room.number }}">
-                {% endfor %}
-              </div>
-            {% else %}
-              <img src="{% static 'images/placeholder.png' %}" alt="Нет фото">
-            {% endif %}
-          </div>
+  <h1 class="detail-title">Категория «{{ kind }}»</h1>
 
-          <!-- Панель характеристик -->
-          <div class="slide-card">
-            <h2>Номер №{{ room.number }}</h2>
-            <hr>
-            <div class="features-grid">
-              <div class="feature">
-                <img src="{% static 'icon/area.png' %}" alt="Площадь">
-                <span>{{ room.area }} м²</span>
-              </div>
-              <div class="feature">
-                <img src="{% static 'icon/bed.png' %}" alt="Кровать">
-                <span>{{ room.bed_type }}</span>
-              </div>
-              <div class="feature">
-                <img src="{% static 'icon/parking.png' %}" alt="Парковка">
-                <span>{{ room.parking }}</span>
-              </div>
-              <div class="feature">
-                <img src="{% static 'icon/tv.png' %}" alt="Телевизор">
-                <span>{{ room.tv }}</span>
-              </div>
-              <div class="feature">
-                <img src="{% static 'icon/ac.png' %}" alt="Кондиционер">
-                <span>{{ room.air_conditioning }}</span>
-              </div>
-              <div class="feature">
-                <img src="{% static 'icon/wifi.png' %}" alt="Wi-Fi">
-                <span>{{ room.wifi }}</span>
-              </div>
-              <div class="feature">
-                <img src="{% static 'icon/iron.png' %}" alt="Утюг">
-                <span>{{ room.iron }}</span>
-              </div>
-            </div>
-            <p class="availability">Свободно {{ room.available|default:'' }} из {{ room.total|default:'' }}</p>
-            <a href="{% url 'booking:room_detail' room.pk %}?check_in={{ check_in }}&check_out={{ check_out }}" class="btn btn-primary">Забронировать</a>
-          </div>
-        </div>
-        {% endwith %}
+  <!-- Слайдер фотографий -->
+  <div class="photo-slider detail-photo">
+    {% if images %}
+      {% for img in images %}
+        <img src="{{ img }}" alt="{{ kind }}" class="detail-img">
       {% endfor %}
-
-      <!-- навигация слайдера -->
       <button class="slider-nav prev">‹</button>
       <button class="slider-nav next">›</button>
-    </div>
+    {% else %}
+      <img src="{% static 'images/placeholder.png' %}" alt="Нет фото" class="detail-img">
+    {% endif %}
   </div>
 
-  <script src="{% static 'js/category_carousel.js' %}" defer></script>
+  <!-- Подробная информация -->
+  <div class="category-full-info">
+    <p>Номера данной категории имеют индивидуальный дизайн и могут отличаться от фотографий, предоставленных на сайте.</p>
+    <ul>
+      <li>Стоимость завтрака Шведский стол на взрослого от 12 лет и старше 1000 рублей</li>
+      <li>Стоимость дополнительного койко-места без завтрака для взрослых (от 4 лет и старше) 1000 рублей</li>
+    </ul>
+
+    <div class="info-sections">
+      <div class="info-column">
+        <h2>В номере:</h2>
+        <ul>
+          <li>двуспальная кровать ({{ bed_type }})</li>
+          <li>ортопедический матрац</li>
+          <li>постельные принадлежности</li>
+          <li>телевизор ({{ tv }})</li>
+          <li>холодильник</li>
+          <li>местная телефонная связь</li>
+          <li>индивидуальный сейф</li>
+          <li>кондиционер ({{ air_conditioning }})</li>
+          <li>кулер на этаже</li>
+        </ul>
+      </div>
+      <div class="info-column">
+        <h2>В ванной комнате:</h2>
+        <ul>
+          <li>душевая кабина</li>
+          <li>фен</li>
+          <li>индивидуальные гигиенические средства</li>
+          <li>махровые полотенца</li>
+          <li>халаты (по запросу гостей бесплатно)</li>
+          <li>тапочки</li>
+        </ul>
+      </div>
+      <div class="info-column">
+        <h2>В стоимость номера входит:</h2>
+        <ul>
+          <li>завтрак</li>
+          <li>приветственная бутилированная вода</li>
+          <li>интернет Wi-Fi</li>
+          <li>вызов такси</li>
+          <li>детская кроватка в номер (по запросу)</li>
+          <li>детский стульчик для кормления (по запросу)</li>
+          <li>охраняемая парковка (при наличии мест)</li>
+          <li>тренажёрный зал</li>
+          <li>камера хранения</li>
+        </ul>
+      </div>
+
+      <div class="info-column">
+        <h2>Дети:</h2>
+        <ul>
+          <li>проживание без питания для детей до 7 лет на основном месте с родителями бесплатно</li>
+          <li>питание для детей до 3 лет включительно бесплатно</li>
+          <li>второй ребёнок от 4 до 12 лет размещается на доп. месте без питания — 1000 ₽</li>
+          <li>стоимость завтрака на детей 4–12 лет — 500 ₽</li>
+        </ul>
+      </div>
+      <div class="info-column">
+        <h2>Заезд и выезд:</h2>
+        <ul>
+          <li>расчётное время: заезд с 14:00, выезд до 12:00</li>
+          <li>«Ранний заезд»* — плата за проживание берётся за сутки</li>
+          <li>«Поздний выезд»* — почасовая оплата до 18:00 или сутки с 18:00</li>
+        </ul>
+        <p>*при наличии свободных номеров</p>
+      </div>
+      <div class="info-column">
+        <h2>Курение запрещено:</h2>
+        <p>В соответствии с приоритетами здоровья, курение запрещено на территории гостиницы.</p>
+      </div>
+    </div>
+
+    <!-- Кнопка брони -->
+    <p class="availability-detail">Свободно {{ available }} из {{ total }}</p>
+    <form method="post" class="book-form" action="#">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary">Забронировать категорию</button>
+    </form>
+  </div>
 {% endblock %}

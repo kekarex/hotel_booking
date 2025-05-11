@@ -1,36 +1,51 @@
 {% extends 'base.html' %}
-{% block title %}Бронирование №{{ room.number }}{% endblock %}
+{% load static %}
+
+{% block title %}{{ kind }} — подробности{% endblock %}
+
 {% block content %}
+  <a href="{% url 'booking:category_list' %}?check_in={{ check_in }}&check_out={{ check_out }}" class="back-link">
+    ← Вернуться к категориям
+  </a>
 
-<p><a href="{% url 'booking:rooms_by_category' room.kind %}?check_in={{ check_in }}&check_out={{ check_out }}">← Назад к списку номеров</a></p>
-<h1>Комната №{{ room.number }} ({{ room.kind }})</h1>
+  <h1 class="detail-title">Категория «{{ kind }}»</h1>
 
-{% if room.image %}
-  <img src="{{ room.image.url }}" alt="Номер {{ room.number }}" class="detail-img">
-{% endif %}
+  <div class="detail-grid">
+    <!-- Слайдер изображений категории -->
+    <div class="detail-photo">
+      {% if images %}
+        <div class="photo-slider">
+          {% for img in images %}
+            <img src="{{ img }}" class="detail-img" alt="Фото {{ kind }}">
+          {% endfor %}
+          <button class="slider-nav prev">‹</button>
+          <button class="slider-nav next">›</button>
+        </div>
+      {% else %}
+        <img src="{% static 'images/placeholder.png' %}" class="detail-img" alt="Нет фото">
+      {% endif %}
+    </div>
 
-<ul class="detail-list">
-  <li>Цена: {{ room.price }}€ за ночь</li>
-  <li>Площадь: {{ room.area }} м²</li>
-  <li>Тип кровати: {{ room.bed_type }}</li>
-  <li>Парковка: {{ room.parking }}</li>
-  <li>Wi-Fi: {{ room.wifi }}</li>
-  <li>Кондиционер: {{ room.air_conditioning }}</li>
-  <li>Телевизор: {{ room.tv }}</li>
-  <li>Утюг: {{ room.iron }}</li>
-</ul>
+    <!-- Панель с иконками и подробностями -->
+    <div class="detail-info">
+      <p class="category-desc">{{ description }}</p>
 
-<h2>Заполните данные бронирования</h2>
-<form method="post" class="booking-form">
-  {% csrf_token %}
-  {{ form.non_field_errors }}
-  <div class="field">
-    {{ form.check_in.label_tag }}<br>{{ form.check_in }}
+      <div class="features-grid">
+        <div class="feature-item"><img src="{% static 'icon/area.png' %}" alt="Площадь"><span>{{ area }} м²</span></div>
+        <div class="feature-item"><img src="{% static 'icon/bed.png' %}" alt="Кровать"><span>{{ bed_type }}</span></div>
+        <div class="feature-item"><img src="{% static 'icon/parking.png' %}" alt="Парковка"><span>{{ parking }}</span></div>
+        <div class="feature-item"><img src="{% static 'icon/tv.png' %}" alt="Телевизор"><span>{{ tv }}</span></div>
+        <div class="feature-item"><img src="{% static 'icon/ac.png' %}" alt="Кондиционер"><span>{{ air_conditioning }}</span></div>
+        <div class="feature-item"><img src="{% static 'icon/wifi.png' %}" alt="Wi-Fi"><span>{{ wifi }}</span></div>
+        <div class="feature-item"><img src="{% static 'icon/iron.png' %}" alt="Утюг"><span>{{ iron }}</span></div>
+      </div>
+
+      <p class="availability-detail">Свободно {{ available }} из {{ total }}</p>
+
+      <form method="post" action="#" class="book-form">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Забронировать категорию</button>
+      </form>
+    </div>
   </div>
-  <div class="field">
-    {{ form.check_out.label_tag }}<br>{{ form.check_out }}
-  </div>
-  <button>Забронировать</button>
-</form>
-
 {% endblock %}

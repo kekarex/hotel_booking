@@ -17,22 +17,21 @@ from django.conf import settings
 }'''
 
 
+
+
 CATEGORY_DESCRIPTIONS = {
     'Business': 'Уютный бизнес-класс с рабочим местом и полным набором услуг.',
     'Deluxe':   'Просторный номер Делюкс с панорамным видом и VIP-сервисом.',
     'Standard': 'Комфортный стандартный номер для недорогого проживания.',
     'Suite':    'Роскошный сьют с отдельной гостиной и кухней.',
-    'Family':   'Большой семейный номер с дополнительными кроватями.'
+    'Family':   'Большой семейный номер с дополнительными кроватями.',
 }
 
-app_name = 'booking'
 
 def category_list(request):
-    # получаем даты заезда/выезда или дефолт
     check_in  = request.GET.get('check_in')  or date.today().isoformat()
     check_out = request.GET.get('check_out') or (date.today() + timedelta(days=1)).isoformat()
 
-    # подсчёт общее/забронировано
     qs = (
         Room.objects.values('kind')
         .annotate(
@@ -51,36 +50,32 @@ def category_list(request):
     categories = []
     for c in qs:
         kind = c['kind']
-        # загружаем статические картинки для категории
         static_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'categories', kind.lower())
-        images = []
+        imgs = []
         if os.path.isdir(static_dir):
             for fn in sorted(os.listdir(static_dir)):
-                if fn.lower().endswith(('.jpg', '.jpeg', '.png', '.gif')):
-                    images.append(settings.STATIC_URL + f'images/categories/{kind.lower()}/{fn}')
+                if fn.lower().endswith(('.jpg','jpeg','png','gif')):
+                    imgs.append(settings.STATIC_URL + f'images/categories/{kind.lower()}/{fn}')
 
-        # берём первую комнату для примера параметров
         sample = Room.objects.filter(kind=kind).first()
 
         categories.append({
-            'kind':         kind,
-            'total':        c['total'],
-            'available':    c['available'],
-            'description':  CATEGORY_DESCRIPTIONS.get(kind, ''),
-            'area':         sample.area if sample else '',
-            'bed_type':     sample.bed_type if sample else '',
-            'parking':      sample.parking if sample else '',
-            'tv':           sample.tv if sample else '',
-            'air_conditioning': sample.air_conditioning if sample else '',
-            'wifi':         sample.wifi if sample else '',
-            'iron':         sample.iron if sample else '',
-            'images':       images,
-            'url':          reverse('booking:rooms_by_category', args=[kind])
-                                + f'?check_in={check_in}&check_out={check_out}'
+            'kind':      kind,
+            'total':     c['total'],
+            'available': c['available'],
+            'area':      getattr(sample, 'area', ''),
+            'bed_type':  getattr(sample, 'bed_type', ''),
+            'parking':   getattr(sample, 'parking', ''),
+            'tv':        getattr(sample, 'tv', ''),
+            'air_conditioning': getattr(sample, 'air_conditioning', ''),
+            'wifi':      getattr(sample, 'wifi', ''),
+            'iron':      getattr(sample, 'iron', ''),
+            'description': CATEGORY_DESCRIPTIONS.get(kind, ''),
+            'images':    imgs,
+            'url':       reverse('booking:rooms_by_category', args=[kind]) + f'?check_in={check_in}&check_out={check_out}',
         })
 
-    # нужный порядок вывода
-    ORDER = ['Standard', 'Family', 'Suite', 'Business', 'Deluxe']
+    ORDER = ['Standard','Family','Suite','Business','Deluxe']
     categories.sort(key=lambda x: ORDER.index(x['kind']) if x['kind'] in ORDER else len(ORDER))
 
     return render(request, 'booking/category_list.html', {
@@ -94,52 +89,61 @@ def rooms_by_category(request, kind):
     check_in  = request.GET.get('check_in')
     check_out = request.GET.get('check_out')
 
-    rooms_qs = Room.objects.filter(kind=kind)
+    sample_qs = Room.objects.filter(kind=kind)
+    if not sample_qs.exists():
+        return render(request, '404.html', status=404)
+    sample = sample_qs.first()
+
+    total = sample_qs.count()
     if check_in and check_out:
-        rooms_qs = rooms_qs.exclude(
+        booked = sample_qs.filter(
             booking__check_in__lt=check_out,
             booking__check_out__gt=check_in
-        )
+        ).count()
+    else:
+        booked = 0
+    available = total - booked
 
-    rooms = []
-    for room in rooms_qs:
-        media_folder = os.path.join(settings.MEDIA_ROOT, 'rooms', str(room.number))
-        imgs = []
-        if os.path.isdir(media_folder):
-            for fn in sorted(os.listdir(media_folder)):
-                if fn.lower().endswith(('.jpg', '.jpeg', '.png', '.gif')):
-                    imgs.append(settings.MEDIA_URL + f'rooms/{room.number}/{fn}')
-        rooms.append({'room': room, 'images': imgs})
+    media_dir = os.path.join(settings.MEDIA_ROOT, 'rooms', str(sample.number))
+    images = []
+    if os.path.isdir(media_dir):
+        for fn in sorted(os.listdir(media_dir)):
+            if fn.lower().endswith(('.jpg','jpeg','png','gif')):
+                images.append(settings.MEDIA_URL + f'rooms/{sample.number}/{fn}')
 
     return render(request, 'booking/rooms_by_category.html', {
         'kind':      kind,
-        'rooms':     rooms,
+        'images':    images,
+        'area':      sample.area,
+        'bed_type':  sample.bed_type,
+        'parking':   sample.parking,
+        'tv':        sample.tv,
+        'air_conditioning': sample.air_conditioning,
+        'wifi':      sample.wifi,
+        'iron':      sample.iron,
+        'description': CATEGORY_DESCRIPTIONS.get(kind, sample.kind),
+        'total':     total,
+        'available': available,
         'check_in':  check_in,
         'check_out': check_out,
     })
 
 
-def room_detail(request, pk):
-    room = get_object_or_404(Room, pk=pk)
+def room_detail(request, kind, pk):
     check_in  = request.GET.get('check_in')
     check_out = request.GET.get('check_out')
 
-    if request.method == 'POST':
-        if not request.user.is_authenticated:
-            return redirect_to_login(request.get_full_path())
-        form = BookingForm(request.POST)
-        if form.is_valid():
-            b = form.save(commit=False)
-            b.user = request.user
-            b.room = room
-            b.save()
-            return redirect('booking:rooms_by_category', kind=room.kind)
-    else:
-        form = BookingForm(initial={'check_in': check_in, 'check_out': check_out})
+    room = get_object_or_404(Room, pk=pk, kind=kind)
+    media_dir = os.path.join(settings.MEDIA_ROOT, 'rooms', str(room.number))
+    imgs = []
+    if os.path.isdir(media_dir):
+        for fn in sorted(os.listdir(media_dir)):
+            if fn.lower().endswith(('.jpg','jpeg','png','gif')):
+                imgs.append(settings.MEDIA_URL + f'rooms/{room.number}/{fn}')
 
     return render(request, 'booking/room_detail.html', {
         'room':      room,
-        'form':      form,
+        'images':    imgs,
         'check_in':  check_in,
         'check_out': check_out,
     })

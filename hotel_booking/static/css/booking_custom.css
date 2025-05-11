@@ -178,3 +178,92 @@
   margin-bottom: 1rem;
   font-weight: 500;
 }
+/* Детальная страница номера */
+.detail-page {
+  max-width: 1000px;
+  margin: 2rem auto;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.detail-page a {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: #3498db;
+  text-decoration: none;
+}
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+.detail-photo img {
+  width: 100%;
+  border-radius: 6px;
+  object-fit: cover;
+}
+.detail-info h2 {
+  margin-top: 1.5rem;
+  font-size: 1.2rem;
+  color: #2c3e50;
+}
+.detail-info ul {
+  list-style: disc inside;
+  margin: 0.5rem 0 1rem;
+  color: #444;
+}
+.detail-info p {
+  margin: 0.5rem 0 1rem;
+  color: #444;
+}
+.detail-info .btn-primary {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.6rem 1.2rem;
+  background: #3498db;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+}
+.detail-title {
+  margin: 1rem 0;
+  font-size: 2rem;
+}
+.category-desc {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+.detail-img {
+  width: 100%;
+  border-radius: 6px;
+  object-fit: cover;
+}
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem 2rem;
+  margin: 1rem 0;
+}
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.feature-item img {
+  width: 24px; height: 24px;
+}
+.availability-detail {
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.book-form {
+  text-align: left;
+}
