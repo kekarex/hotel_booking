@@ -1,13 +1,26 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Главная{% endblock %}
+{% block title %}Главная — Линия 45°{% endblock %}
 
 {% block content %}
-  <h1>Добро пожаловать в наш отель!</h1>
-  <p>Предлагаем комфортные номера и отличный сервис.</p>
-  <p>
-    <a class="button" href="{% url 'booking:category_list' %}">
-      Перейти к номерам и ценам
-    </a>
-  </p>
+<div class="hero-section">
+  <div class="hero-bg"
+       style="background-image: url('{% static "images/reception.png" %}');">
+  </div>
+
+  <div class="hero-form">
+    <form method="get" action="{% url 'booking:category_list' %}">
+      <label>
+        Заезд
+        <input type="date" name="check_in" value="{{ check_in|default:'' }}">
+      </label>
+      <label>
+        Выезд
+        <input type="date" name="check_out" value="{{ check_out|default:'' }}">
+      </label>
+      <button type="submit">Найти номер</button>
+    </form>
+  </div>
+</div>
 {% endblock %}

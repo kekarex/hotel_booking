@@ -1,11 +1,22 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block title %}Услуги{% endblock %}
+
 {% block content %}
-  <h1>Услуги</h1>
-  <ul>
-    <li>Бассейн</li>
-    <li>Спа</li>
-    <li>Ресторан</li>
-    <li>Бесплатный Wi-Fi</li>
-  </ul>
+  <section class="site-section">
+    <div class="container">
+      <h1 class="section-title">Наши услуги</h1>
+      <p class="lead mb-4">
+        В нашем отеле вы можете воспользоваться следующими услугами:
+      </p>
+      <ul class="list-unstyled services-list">
+        {% for service in services %}
+          <li class="mb-2">
+            <i class="fas fa-check-circle text-primary me-2"></i>{{ service }}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
 {% endblock %}

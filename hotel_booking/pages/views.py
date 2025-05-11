@@ -18,10 +18,20 @@ def about(request):
     return render(request, 'pages/about.html')
 
 def services(request):
-    """
-    Страница «Услуги».
-    """
-    return render(request, 'pages/services.html')
+    services_list = [
+        'Завтрак «Шведский стол»',
+        'Парковка',
+        'Бассейн',
+        'СПА-центр',
+        'Тренажёрный зал',
+        'Трансфер до аэропорта (по запросу)',
+        'Ресторан и бар',
+        'Консьерж-сервис',
+        # 'Wi-Fi (удалено по просьбе)',  ← убрали
+    ]
+    return render(request, 'pages/services.html', {
+        'services': services_list
+    })
 
 def reviews(request):
     reviews_qs = Review.objects.all()

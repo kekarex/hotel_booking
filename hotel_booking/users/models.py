@@ -5,7 +5,6 @@ from django.utils.translation import gettext_lazy as _
 class CustomUser(AbstractUser):
     phone = models.CharField('Телефон', max_length=20, blank=True)
 
-    # Переопределяем поля, чтобы не было дублирующихся related_name
     groups = models.ManyToManyField(
         Group,
         verbose_name=_('groups'),
@@ -14,7 +13,7 @@ class CustomUser(AbstractUser):
             'The groups this user belongs to. A user will get all permissions '
             'granted to each of their groups.'
         ),
-        related_name='customuser_set',          # <- уникальное имя
+        related_name='customuser_set',
         related_query_name='customuser',
     )
     user_permissions = models.ManyToManyField(
@@ -22,7 +21,7 @@ class CustomUser(AbstractUser):
         verbose_name=_('user permissions'),
         blank=True,
         help_text=_('Specific permissions for this user.'),
-        related_name='customuser_permissions',   # <- уникальное имя
+        related_name='customuser_permissions',
         related_query_name='customuser_perm',
     )
 

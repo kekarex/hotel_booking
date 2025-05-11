@@ -412,3 +412,105 @@
 .navbar-nav a:hover::after {
   transform: scaleX(1);            /* показываем underline */
 }
+/* ==== Hero (главный баннер) ==== */
+.hero-section {
+  position: relative;
+  width: 100%;
+  height: 600px;                /* можете подправить высоту */
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.hero-bg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.85);
+}
+
+.hero-form {
+  position: absolute;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: nowrap;          /* больше не переносим на новую строку */
+  flex-direction: row;        /* строго в строку */
+}
+
+
+.hero-form label {
+  color: #fff;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+}
+
+.hero-form input[type="date"] {
+  margin-top: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.hero-form button {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #2196F3;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.hero-form button:hover {
+  transform: translateY(-3px);
+}
+
+@media (max-width: 600px) {
+  /* при очень узких экранах пусть уж сами лейблы чуть ужимаются, но не переносятся */
+  .hero-form {
+    gap: 0.5rem;
+    bottom: 15%;
+  }
+  .hero-form label,
+  .hero-form button {
+    min-width: unset;         /* убираем жесткие минимумы */
+  }
+}
+/* Герой-блок во всю ширину */
+.hero {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  /* height уже задан инлайном, можно перенести сюда, например: */
+  /* height: 70vh; */
+}
+
+/* Убираем отступы у body/main, чтобы герой сидел вплотную */
+body, header, .navbar, .hero {
+  padding: 0;
+  margin: 0;
+}
+
+/* Основной контент сразу под героем */
+.site-content {
+  margin-top: 0;
+  padding-top: 2rem;
+}
+
+/* Футер всегда прилегает к низу без лишних «провалов» */
+.site-footer {
+  margin-top: 0;
+}

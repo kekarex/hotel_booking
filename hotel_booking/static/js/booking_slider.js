@@ -5,20 +5,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const total = slides.length;
     let idx = 0;
 
-    // Задаём track и слайдам относительные размеры
     track.style.width = `${total * 100}%`;
     slides.forEach(slide => {
       slide.style.width = `${100 / total}%`;
     });
 
-    // Навигационные кнопки
     const prev = container.querySelector('.slider-nav.prev');
     const next = container.querySelector('.slider-nav.next');
     if (!prev || !next) return;
 
     function goTo(i) {
       idx = (i + total) % total;
-      // смещаем на ширину одного слайда * номер
       track.style.transform = `translateX(-${idx * (100 / total)}%)`;
     }
 

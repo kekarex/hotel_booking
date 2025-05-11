@@ -323,3 +323,13 @@ button:hover {
   background: #aaa;
   pointer-events: none;
 }
+/* логотип в шапке */
+.site-logo {
+  height: 2rem;         /* можно подправить под ваш макет */
+  margin-right: 0.5rem;
+}
+.site-title {
+  font-size: 1.5rem;    /* соответствует размеру шрифта бренда */
+  font-weight: bold;
+  color: inherit;       /* унаследует цвет текста в навбаре */
+}
