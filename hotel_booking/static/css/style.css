@@ -1,6 +1,4 @@
-/* static/css/style.css */
 
-/* === Цветовые переменные === */
 :root {
   --primary-color: #2c3e50;
   --secondary-color: #ecf0f1;
@@ -10,7 +8,6 @@
   --font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
-/* === Сброс отступов и границ === */
 *,
 *::before,
 *::after {
@@ -19,7 +16,6 @@
   box-sizing: border-box;
 }
 
-/* === Базовые стили страницы === */
 body {
   font-family: var(--font-family);
   color: var(--text-color);
@@ -36,7 +32,6 @@ a:hover {
   text-decoration: underline;
 }
 
-/* === Навигационная панель === */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -64,7 +59,6 @@ a:hover {
   font-weight: 500;
 }
 
-/* === Контейнер контента === */
 .site-content {
   max-width: 1200px;
   margin: 2rem auto;
@@ -74,13 +68,11 @@ a:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* === Заголовки === */
 h1, h2, h3 {
   margin-bottom: 1rem;
   color: var(--primary-color);
 }
 
-/* === Сообщения === */
 .messages {
   margin-bottom: 1rem;
 }
@@ -101,7 +93,6 @@ h1, h2, h3 {
   color: #721c24;
 }
 
-/* === Кнопки === */
 button {
   background-color: var(--accent-color);
   color: #fff;
@@ -117,7 +108,6 @@ button:hover {
   opacity: 0.9;
 }
 
-/* === Списки комнат === */
 .room-list {
   list-style: none;
   padding: 0;
@@ -127,7 +117,6 @@ button:hover {
   margin: 0.5rem 0;
 }
 
-/* === Форма бронирования === */
 .booking-form {
   max-width: 400px;
   margin-top: 1rem;
@@ -143,7 +132,6 @@ button:hover {
   border-radius: 4px;
 }
 
-/* === Футер === */
 .site-footer {
   text-align: center;
   padding: 2rem 0;
@@ -152,7 +140,6 @@ button:hover {
   margin-top: 2rem;
 }
 
-/* === Адаптивность === */
 @media (max-width: 768px) {
   .navbar {
     flex-direction: column;
@@ -165,7 +152,7 @@ button:hover {
 }
 .star-rating {
   display: flex;
-  flex-direction: row-reverse;  /* Визуально: 5→1, но DOM — 1→5 */
+  flex-direction: row-reverse;
 }
 
 .star-rating input {
@@ -180,18 +167,15 @@ button:hover {
   user-select: none;
 }
 
-/* Подсветка при наведении: именно влево от курсора */
 .star-rating label:hover,
 .star-rating label:hover ~ label {
   color: gold;
 }
 
-/* Фиксированная подсветка выбранных звёзд */
 .star-rating input:checked ~ label {
   color: gold;
 }
 
-/* Чтобы при наведении после выбора подсветка оставалась */
 .star-rating input:checked ~ label:hover,
 .star-rating input:checked ~ label:hover ~ label {
   color: gold;
@@ -199,12 +183,10 @@ button:hover {
 
 }
 
-/* --- Подсветка выбранных звёзд (input:checked) --- */
 .star-rating input:checked ~ label {
   color: gold;
 }
 
-/* --- Чтобы при наведении после выбора подсветка оставалась --- */
 .star-rating input:checked ~ label:hover,
 .star-rating input:checked ~ label:hover ~ label {
   color: gold;
@@ -219,13 +201,9 @@ button:hover {
   margin-bottom: .5rem;
 }
 
-/* ваш .star-rating уже inline-flex – он не будет растягиваться */
 .star-rating {
-  /* если нужно, центровать: */
-  /* display: flex; justify-content: center; */
   margin-bottom: .5rem;
 }
-/* Общие поля */
 .field {
   margin-bottom: 1.5rem;
 }
@@ -236,18 +214,15 @@ button:hover {
   font-weight: bold;
 }
 
-/* Контейнер звёзд */
 .star-rating {
   display: inline-flex;
   flex-direction: row-reverse;
 }
 
-/* Скрываем радио, оставляем только метки */
 .star-rating input {
   display: none;
 }
 
-/* Сам вид звезды */
 .star-rating label {
   font-size: 2rem;
   color: lightgray;
@@ -256,24 +231,20 @@ button:hover {
   user-select: none;
 }
 
-/* Подсветка при наведении */
 .star-rating label:hover,
 .star-rating label:hover ~ label {
   color: gold;
 }
 
-/* Подсветка выбранных звёзд */
 .star-rating input:checked ~ label {
   color: gold;
 }
 
-/* Сохранение подсветки при наведении после выбора */
 .star-rating input:checked ~ label:hover,
 .star-rating input:checked ~ label:hover ~ label {
   color: gold;
 }
 
-/* Стили для textarea */
 textarea {
   width: 100%;
   height: 100px;
@@ -323,13 +294,12 @@ button:hover {
   background: #aaa;
   pointer-events: none;
 }
-/* логотип в шапке */
 .site-logo {
-  height: 2rem;         /* можно подправить под ваш макет */
+  height: 2rem;
   margin-right: 0.5rem;
 }
 .site-title {
-  font-size: 1.5rem;    /* соответствует размеру шрифта бренда */
+  font-size: 1.5rem;
   font-weight: bold;
-  color: inherit;       /* унаследует цвет текста в навбаре */
+  color: inherit;
 }

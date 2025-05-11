@@ -31,14 +31,11 @@ class Booking(models.Model):
     class Meta:
         verbose_name = 'Бронирование'
         verbose_name_plural = 'Бронирования'
-        # гарантируем отсутствие двойных бронирований одного номера
         unique_together = ('room', 'check_in', 'check_out')
 
     def clean(self):
-        # check that dates make sense
         if self.check_out <= self.check_in:
             raise ValidationError('Дата выезда должна быть после даты заезда.')
-        # overlapping bookings
         overlapping = Booking.objects.filter(
             room=self.room,
             check_in__lt=self.check_out,

@@ -20,7 +20,6 @@ CATEGORY_DESCRIPTIONS = {
 }
 
 def category_list(request):
-    # ваш код без изменений
     check_in  = request.GET.get('check_in')  or date.today().isoformat()
     check_out = request.GET.get('check_out') or (date.today() + timedelta(days=1)).isoformat()
     qs = (
@@ -38,7 +37,6 @@ def category_list(request):
     for c in qs:
         kind = c['kind']
         sample = Room.objects.filter(kind=kind).first()
-        # собираем список картинок для слайдера
         static_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'categories', kind.lower())
         imgs = []
         if os.path.isdir(static_dir):
@@ -88,7 +86,6 @@ def rooms_by_category(request, kind):
         booked = 0
     available = total - booked
 
-    # слайдер картинок
     static_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'categories', kind.lower())
     images = []
     if os.path.isdir(static_dir):
@@ -96,17 +93,14 @@ def rooms_by_category(request, kind):
             if fn.lower().endswith(('.jpg','.jpeg','.png','.gif')):
                 images.append(settings.STATIC_URL + f'images/categories/{kind.lower()}/{fn}')
 
-    # ОБРАБОТКА ЗАПРОСА НА БРОНИРОВАНИЕ
     if request.method == 'POST':
         if available <= 0:
             messages.error(request, 'К сожалению, в выбранные даты нет свободных номеров.')
         else:
-            # находим первую свободную комнату
             free_room = qs.exclude(
                 booking__check_in__lt=check_out,
                 booking__check_out__gt=check_in
             ).first()
-            # создаём бронь
             Booking.objects.create(
                 user=request.user,
                 room=free_room,
@@ -114,9 +108,7 @@ def rooms_by_category(request, kind):
                 check_out=check_out
             )
             messages.success(request, f'Успешно забронирован номер {free_room.number}!')
-            # обновляем available
             available -= 1
-        # перенаправляем, чтобы избежать повторного POST при обновлении страницы
         return redirect(request.path + f'?check_in={check_in}&check_out={check_out}')
 
     return render(request, 'booking/rooms_by_category.html', {

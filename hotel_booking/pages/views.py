@@ -27,7 +27,6 @@ def services(request):
         'Трансфер до аэропорта (по запросу)',
         'Ресторан и бар',
         'Консьерж-сервис',
-        # 'Wi-Fi (удалено по просьбе)',  ← убрали
     ]
     return render(request, 'pages/services.html', {
         'services': services_list
@@ -47,7 +46,6 @@ def reviews(request):
     else:
         form = ReviewForm()
 
-    # Добавляем в контекст список [1,2,3,4,5]
     context = {
         'reviews': reviews_qs,
         'form': form,

@@ -1,9 +1,8 @@
-/* Полный сброс box-sizing */
+
 * {
   box-sizing: border-box;
 }
 
-/* Вертикальный список карточек */
 .grid-categories {
   display: flex;
   flex-direction: column;
@@ -12,7 +11,6 @@
   padding: 0;
 }
 
-/* Карточка категории: картинка+контент */
 .cat-card {
   display: flex;
   background: #fff;
@@ -29,7 +27,6 @@
   pointer-events: none;
 }
 
-/* Слайдер внутри карточки (40% ширины) */
 .category-carousel {
   position: relative;
   flex: 0 0 40%;
@@ -50,7 +47,6 @@
   object-fit: cover;
 }
 
-/* Навигационные стрелки */
 .carousel-nav {
   position: absolute;
   top: 50%;
@@ -65,7 +61,6 @@
 .carousel-nav.prev { left: 0.5rem; }
 .carousel-nav.next { right: 0.5rem; }
 
-/* Блок с информацией (60% ширины) */
 .cat-info {
   flex: 1;
   padding: 1rem;
@@ -82,7 +77,6 @@
   color: #666;
 }
 
-/* Кнопка */
 .cat-info .btn {
   align-self: flex-start;
   padding: 0.5rem 1rem;
@@ -95,7 +89,6 @@
 .cat-info .btn.disabled {
   background: #aaa;
 }
-/* === Фильтр дат на всю ширину === */
 .filter-bar {
   width: 100%;
   margin-bottom: 2rem;
@@ -110,7 +103,7 @@
 }
 
 .filter-form label {
-  flex: 1 1 200px;    /* каждый label растягивается, но не меньше 200px */
+  flex: 1 1 200px;
   display: flex;
   flex-direction: column;
 }
@@ -156,7 +149,6 @@
   height: 20px;
   margin-right: 0.5rem;
 }
-/* Сетка микро-иконок */
 .features-grid {
   display: flex;
   flex-wrap: wrap;
@@ -178,7 +170,6 @@
   margin-bottom: 1rem;
   font-weight: 500;
 }
-/* Детальная страница номера */
 .detail-page {
   max-width: 1000px;
   margin: 2rem auto;
@@ -227,7 +218,6 @@
   text-decoration: none;
   border-radius: 4px;
 }
-/* ========== СЛАЙДЕР ========== */
 .slider-container {
   position: relative;
   overflow: hidden;
@@ -242,7 +232,6 @@
   flex-shrink: 0;
   width: 100%;
   object-fit: cover;
-  /* одинаковая высота для всех слайдов */
   height: 300px;
 }
 .slider-nav {
@@ -260,7 +249,6 @@
 .slider-nav.prev { left: 0.5rem; }
 .slider-nav.next { right: 0.5rem; }
 
-/* ========== СПИСОК КАТЕГОРИЙ ========== */
 .category-list {
   display: flex;
   flex-direction: column;
@@ -297,7 +285,6 @@
   text-align: center;
 }
 
-/* ========== ДЕТАЛИ КАТЕГОРИИ ========== */
 .detail-slider .slider-img.detail {
   height: 400px;
 }
@@ -328,7 +315,6 @@
   font-weight: bold;
   margin: 1rem 0;
 }
-/* Общее выравнивание */
 .back-link {
   display: inline-block;
   margin-bottom: 1rem;
@@ -363,33 +349,26 @@
   border-radius: 4px;
   cursor: pointer;
 }
-/* ---------- NAVBAR ---------- */
 .navbar {
-  /* чуть больше отступов по бокам */
   padding: 1rem 3rem;
-  /* плавный переход для теней и фона */
   transition: box-shadow 0.3s ease, background-color 0.3s ease;
-  /* лёгкая тень изначально */
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
-/* при наведении на всю панель — увеличиваем тень */
 .navbar:hover {
   box-shadow: 0 6px 16px rgba(0,0,0,0.25);
 }
 
-/* список ссылок */
+
 .navbar-nav a {
   position: relative;
   padding: 0.5rem 0.75rem;
   color: var(--secondary-color);
   text-decoration: none;
   font-weight: 500;
-  /* плавный подъём и цвет */
   transition: transform 0.2s ease, color 0.3s ease;
 }
 
-/* градиентная «underline» линия */
 .navbar-nav a::after {
   content: '';
   position: absolute;
@@ -397,26 +376,23 @@
   bottom: -2px;
   width: 100%;
   height: 2px;
-  /* градиент от основного к контрастному цвету */
   background: linear-gradient(90deg, #ffffff, #dddddd);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.3s ease;
 }
 
-/* ховер-эффекты на ссылке */
 .navbar-nav a:hover {
-  color: #ffffff;                  /* делаем цвет ярче */
-  transform: translateY(-2px);     /* немного приподнимаем */
+  color: #ffffff;
+  transform: translateY(-2px);
 }
 .navbar-nav a:hover::after {
-  transform: scaleX(1);            /* показываем underline */
+  transform: scaleX(1);
 }
-/* ==== Hero (главный баннер) ==== */
 .hero-section {
   position: relative;
   width: 100%;
-  height: 600px;                /* можете подправить высоту */
+  height: 600px;
   overflow: hidden;
   margin-bottom: 2rem;
 }
@@ -439,8 +415,8 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  flex-wrap: nowrap;          /* больше не переносим на новую строку */
-  flex-direction: row;        /* строго в строку */
+  flex-wrap: nowrap;
+  flex-direction: row;
 }
 
 
@@ -476,17 +452,15 @@
 }
 
 @media (max-width: 600px) {
-  /* при очень узких экранах пусть уж сами лейблы чуть ужимаются, но не переносятся */
   .hero-form {
     gap: 0.5rem;
     bottom: 15%;
   }
   .hero-form label,
   .hero-form button {
-    min-width: unset;         /* убираем жесткие минимумы */
+    min-width: unset;         /
   }
 }
-/* Герой-блок во всю ширину */
 .hero {
   width: 100vw;
   position: relative;
@@ -494,23 +468,19 @@
   right: 50%;
   margin-left: -50vw;
   margin-right: -50vw;
-  /* height уже задан инлайном, можно перенести сюда, например: */
-  /* height: 70vh; */
+
 }
 
-/* Убираем отступы у body/main, чтобы герой сидел вплотную */
 body, header, .navbar, .hero {
   padding: 0;
   margin: 0;
 }
 
-/* Основной контент сразу под героем */
 .site-content {
   margin-top: 0;
   padding-top: 2rem;
 }
 
-/* Футер всегда прилегает к низу без лишних «провалов» */
 .site-footer {
   margin-top: 0;
 }
