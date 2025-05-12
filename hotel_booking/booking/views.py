@@ -25,11 +25,11 @@ def category_list(request):
     qs = (
         Room.objects.values('kind')
         .annotate(
-            total=Count('id'),
+            total=Count('id', distinct=True),
             booked=Count('booking', filter=Q(
                 booking__check_in__lt=check_out,
                 booking__check_out__gt=check_in
-            ))
+            ), distinct=True, )
         )
         .annotate(available=F('total') - F('booked'))
     )
